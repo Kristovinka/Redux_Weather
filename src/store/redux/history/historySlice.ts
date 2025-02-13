@@ -33,11 +33,11 @@ export const historySlice = createAppSlice({
           state.status = "loading"
           state.error = undefined
         },
-        fulfilled: (state: HistorySliceState, action) => {
-          state.data = [...state.data, `${action.payload.name} - ${action.payload.main.temp.toFixed(2)}°C`]
+        fulfilled: (state: HistorySliceState, action: any) => {
+          state.data = [...state.data, action.payload.name, action.payload.main.temp.toFixed(2),`http://openweathermap.org/img/w/${action.payload.weather[0].icon}.png`]
           state.status = "success"
         },
-        rejected: (state: HistorySliceState, action: any) => {
+        rejected: (state: HistorySliceState,  action: any) => {
           state.error = action.payload
           state.status = "error"
         },
@@ -49,7 +49,7 @@ export const historySlice = createAppSlice({
     }),
   }),
   selectors: {
-    weatherData: (state: HistorySliceState) => state.data
+    weatherData: (state: HistorySliceState) => state
   }
 })
 

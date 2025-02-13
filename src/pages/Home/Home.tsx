@@ -33,9 +33,9 @@ function Home() {
   
    const { data, error, status } = useAppSelector(historySelectors.weatherData)
 
-   const results = data.map((result) = {
-   return (<InfoCard key={v4()}>{result}</InfoCard>)
- })
+//    const results = data.map((result) = {
+//    return (<InfoCard key={v4()}>{result}</InfoCard>)
+//  })
   
 
   const formik = useFormik({
