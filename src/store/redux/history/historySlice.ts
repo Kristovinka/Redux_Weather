@@ -3,6 +3,7 @@ import axios from "axios"
 import { createAppSlice } from "store/createAppSlice"
 import { HistorySliceState } from "./types"
 import { PayloadAction } from "@reduxjs/toolkit"
+import { v4 } from "uuid"
 
 const historyInitialState: HistorySliceState = {
   data: [],
@@ -21,10 +22,11 @@ export const historySlice = createAppSlice({
       async (cityName: string, thunkApi) => {
         try {
           const result = await axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APP_ID}`)
-            
+            `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${APP_ID}`,
+          )
+
           return result.data
-        } catch (error:any) {
+        } catch (error: any) {
           return thunkApi.rejectWithValue(error.message)
         }
       },
@@ -33,11 +35,19 @@ export const historySlice = createAppSlice({
           state.status = "loading"
           state.error = undefined
         },
-        fulfilled: (state: HistorySliceState, action: any) => {
-          state.data = [...state.data, action.payload.name, action.payload.main.temp.toFixed(2),`http://openweathermap.org/img/w/${action.payload.weather[0].icon}.png`]
+        fulfilled: (state: HistorySliceState, action: PayloadAction<any>) => {
+          state.data = [
+            ...state.data,
+            {
+              cityName: action.payload.name,
+              temp: parseFloat(action.payload.main.temp.toFixed()),
+              iconUrl: `http://openweathermap.org/img/w/${action.payload.weather[0].icon}.png`,
+              id: v4(),
+            },
+          ]
           state.status = "success"
         },
-        rejected: (state: HistorySliceState,  action: any) => {
+        rejected: (state: HistorySliceState, action: any) => {
           state.error = action.payload
           state.status = "error"
         },
@@ -47,10 +57,15 @@ export const historySlice = createAppSlice({
     deleteInfo: create.reducer((state: HistorySliceState) => {
       state.data = []
     }),
+
+    deleteItem: create.reducer((state: HistorySliceState, action: PayloadAction<{ id: string }>) => {
+      state.data = state.data.filter(item => item.id !== action.payload.id);
+    }),
+    
   }),
   selectors: {
-    weatherData: (state: HistorySliceState) => state
-  }
+    weatherData: (state: HistorySliceState) => state,
+  },
 })
 
 export const historyActions = historySlice.actions

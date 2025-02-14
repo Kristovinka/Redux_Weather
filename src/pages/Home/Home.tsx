@@ -6,11 +6,12 @@ import {
   SearchContainer,
   HomeContainer,
   ResultContainer,
+  TextCard,
   InfoCard,
+  ErrorContainer,
   Paragraph,
 } from "./styles"
 import { cityFormNames } from "./types"
-import { v4 } from "uuid"
 import { useAppDispatch, useAppSelector } from "store/hooks"
 import { useFormik } from "formik"
 import * as Yup from "yup"
@@ -21,7 +22,6 @@ import {
 import Spinner from "components/Spinner/Spinner"
 
 function Home() {
-
   const schema = Yup.object().shape({
     cityName: Yup.string()
       .required("Field city Name is required")
@@ -30,23 +30,22 @@ function Home() {
   })
 
   const dispatch = useAppDispatch()
-  
-   const { data, error, status } = useAppSelector(historySelectors.weatherData)
 
-//    const results = data.map((result) = {
-//    return (<InfoCard key={v4()}>{result}</InfoCard>)
-//  })
-  
+  const { data, error, status } = useAppSelector(historySelectors.weatherData)
+
+  const result = data[data.length - 1]
 
   const formik = useFormik({
     initialValues: {
       cityName: "",
+      temp: undefined,
+      iconUrl: "",
     } as cityFormNames,
     validationSchema: schema,
     validateOnChange: false,
 
-    onSubmit: (values) => {
-      dispatch(historyActions.getWeather(values.cityName as string));
+    onSubmit: values => {
+      dispatch(historyActions.getWeather(values.cityName))
     },
   })
 
@@ -63,13 +62,18 @@ function Home() {
           />
           <Button name="Search" type="submit" />
         </SearchContainer>
-        {status === 'loading' && <Spinner />} 
-        {status === 'error' && <ResultContainer>{error}</ResultContainer>}
-        <InfoCard>
-          <Paragraph>Temperature: {results}°C</Paragraph>
-          <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} alt="weather icon" />
-        </InfoCard> 
-        {status === 'success' && <ResultContainer>{results}</ResultContainer> }
+        {status === "loading" && <Spinner />}
+        {status === "error" && <ErrorContainer>{error}</ErrorContainer>}
+        {status === "success" && (
+          <ResultContainer>
+            <InfoCard key={result.id}>
+              <TextCard>
+                {result.temp}°<Paragraph>{result.cityName}</Paragraph>
+              </TextCard>
+              <img width={150} src={result.iconUrl} alt="weather icon" />
+            </InfoCard>
+          </ResultContainer>
+        )}
       </HomeContainer>
     </HomePageWrapper>
   )

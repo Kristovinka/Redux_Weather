@@ -1,3 +1,6 @@
 export interface cityFormNames {
-  cityName: string | undefined
+  id: string,
+  temp: number | undefined,
+  iconUrl: string,
+  cityName: string 
 }

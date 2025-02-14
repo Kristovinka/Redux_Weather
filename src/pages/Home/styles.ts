@@ -17,24 +17,42 @@ export const SearchContainer = styled.form`
 `
 
 export const HomeContainer = styled.p`
-  font-size: 24px;
   font-weight: bold;
   color: #0e2936;
 `
-export const ResultContainer= styled.div`
+export const ResultContainer = styled.div`
+  border-radius: 10px;
+  width: 690px;
+  height: 180px;
   font-size: 24px;
   font-weight: bold;
-  color: rgb(15, 15, 75);
+  color: rgb(255, 255, 255);
+  background-color: #10265561;
 `
-
-export const InfoCard = styled.div`
+export const ErrorContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  width: 690px;
+  height: 180px;
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(192, 51, 51);
+  background-color: #10265561;
+`
+export const InfoCard = styled.div`
+  font-size: 36px;
+  display: flex;
+  flex-direction: row;
   gap: 20px;
   width: 280px;
   padding: 20px;
-  border-radius: 8px;
-  border: 1px solid black;
+`
+export const TextCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 export const Paragraph = styled.p`
   width: 100%;
@@ -42,4 +60,3 @@ export const Paragraph = styled.p`
   overflow: hidden;
   font-size: 16px;
 `
-
